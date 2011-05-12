@@ -1,0 +1,108 @@
+div.songkick-events .profile-title {
+	margin-top: 8px; 
+	margin-bottom: 10px; 
+	float: right;
+}
+
+div.songkick-events .powered-by {
+	margin: 0px;
+}
+
+div.songkick-events .powered-by img {
+	margin: 0px;
+	border: 0px;
+}
+
+div.songkick-events .event-name {
+	display:block;
+	margin-left:44px;
+}
+
+div.songkick-events .venue {
+	font-size: 12px;
+}
+
+div.songkick-events .event-location {
+	font-weight:bold;
+}
+
+div.songkick-events ul {
+	border-bottom:1px solid #CCCCCC;
+	margin-bottom:5px;
+	margin-top: 10px;
+	margin-left: 0px;
+	padding: 0px;
+	list-style:none outside none;
+}
+
+div.songkick-events li {
+	margin-bottom: 10px;
+}
+
+div.songkick-events li a { 
+	color: #333333;
+	height: 50px;
+	text-decoration: none;
+}
+
+div.songkick-events li a:hover {
+	background-color:transparent;
+	color: #006fb9  !important;
+}
+
+div.songkick-events .date-wrapper {
+	font-size:7px;
+	font-weight:bold;
+	margin-right:10px;
+	color:#333333;
+	float:left;
+	text-align:center;
+	width:34px;
+	margin-left:0px;
+	line-height:1.1em;
+}
+
+div.songkick-events .date-wrapper a {
+	text-decoration: none;
+	color:#000000;
+}
+
+div.songkick-events .date-wrapper .day-name {
+	background-color: #303030;
+	color:#FFFFFF;
+	display:block;
+	font-size:7px;
+	line-height:10px;
+	padding-bottom:1px;
+	padding-top:2px;
+	text-shadow:1px 1px rgba(0, 0, 0, 0.6);
+	text-transform:uppercase;
+}
+
+div.songkick-events .date-wrapper .day-month {
+	border: 1px solid #878787;
+	display:block;
+	padding-bottom:4px;
+	padding-top:3px;
+	line-height:1.1em;
+}
+
+div.songkick-events .date-wrapper .day {
+	display:block;
+	font-size:1.8em;
+	margin: 0px;
+	margin-top: 2px;
+	padding: 0px;
+}
+
+div.songkick-events .date-wrapper .month {
+	font-size:1.4em;
+	margin: 0px;
+	margin-bottom: 2px;
+	padding: 0px;
+}
+
+div.songkick-events .date-wrapper .year {
+	font-size:1.6em;
+	line-height:1em;
+}
