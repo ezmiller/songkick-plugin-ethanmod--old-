@@ -118,7 +118,15 @@ function songkick_upcoming_concerts_and_festivals_shortcode_handler() {
 	$logo             = $options['shortcode_logo'];
 	$sk = songkick_events_factory($options);
 	$page_to_get = 1; // get the first page
-	$events = $sk->get_upcoming_events($number_of_events);
+	try {
+		$events = $sk->get_upcoming_events($number_of_events,$page_to_get,'ascending');
+	} catch (Exception $e) {
+		echo "Ooops!  The server had some trouble finding the events list.  Please refresh this page and with a bit of luck it may work.";
+		$msg = 'The Following error occured on '.get_bloginfo('url').' while trying to fetch upcoming songkick events: '. $e->getMessage();
+		error_log($msg, 0);   //Send message to system log.
+		error_log($msg, 1, "ethanzanemiller@gmail.com");  //Send message to eThan
+		die();
+	}
 	echo '<div class="songkick-events">';
 	songkick_display_events($events, $sk->profile_url(), $date_color, $logo);
 	echo '</div>';
@@ -131,8 +139,24 @@ function songkick_past_concerts_and_festivals_shortcode_handler() {
 	$number_of_events	= $options['shortcode_number_of_events'];
 	$logo			= $options['shortcode_logo'];
 	$sk = songkick_events_factory($options);
-	$page_to_get = $sk->get_number_of_pages('past_events',$number_of_events);  // get last page #
-	$events = $sk->get_past_events($number_of_events,$page_to_get,'descending');
+	try {
+		$page_to_get = $sk->get_number_of_pages('past_events',$number_of_events);  // get last page #
+	} catch (Exception $e) {
+		echo "Ooops!  The server had some trouble finding the events list.  Please refresh this page and with a bit of luck it may work.";
+		$msg = 'The following error occured on '.get_bloginfo('url').' while trying to fetch number of pages of songkick events: '. $e->getMessage();
+		error_log($msg,0);  // Send error message to systme log.
+		error_log($msg, 1, "ethanzanemiller@gmail.com");  // Send error message to eThan.
+		die();
+	}
+	try {
+		$events = $sk->get_past_events($number_of_events,$page_to_get,'descending');
+	} catch (Exception $e) {
+		echo "Ooops!  The server had some trouble finding the events list.  Please refresh this page and with a bit of luck it may work.";
+		$msg = 'The Following error occured on '.get_bloginfo('url').' while trying to fetch past songkick events: '. $e->getMessage();
+		error_log($msg, 0);   //Send message to system log.
+		error_log($msg, 1, "ethanzanemiller@gmail.com");  //Send message to eThan
+		die();
+	}
 	echo '<div class="songkick-events">';
 	songkick_display_events($events, $sk->profile_url(), $date_color, $logo);
 	echo '</div>';

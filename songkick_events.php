@@ -12,8 +12,9 @@ class SongkickEvents {
 	function get_upcoming_events($per_page=10, $page=1, $sorder='ascending') {
 		$cached_results = $this->get_cached_calendar_results($this->calendar_url($per_page, $page));
 		if ($this->calendar_cache_expired($cached_results)) {
-			echo "Getting results from songkick server...";
-			$json_results = $this->get_uncached_upcoming_events($per_page);
+			try {
+				$json_results = $this->get_uncached_upcoming_events($per_page);
+			} catch (Exception $e) { throw $e; }
 			$cached_results = array( 'events' => $json_results->resultsPage->results->event,
 						 'totalEntries' => $json_results->resultsPage->totalEntries,
 						 'perPage' => $json_results->resultsPage->perPage,
@@ -25,7 +26,7 @@ class SongkickEvents {
 		} else {
 			$events = $cached_results['events'];
 		}
-		if ( $sorder = 'descending' ) {
+		if ( $sorder == 'descending' ) {
 			usort($events, array($this,'compare_event_dates'));
 		}
 		return $events;
@@ -34,8 +35,9 @@ class SongkickEvents {
 	function get_past_events($per_page=10, $page=1, $sorder='ascending') {
 		$cached_results = $this->get_cached_gigography_results($this->gigography_url($per_page, $page));
 		if ($this->gigography_cache_expired($cached_results)) {
-			echo "Getting past events from the songkick server...\n";
-			$json_results = $this->get_uncached_gigography_events($per_page, $page);
+			try {
+				$json_results = $this->get_uncached_gigography_events($per_page, $page);
+			} catch (Exception $e) { throw $e; }
 			$cached_results = array( 'events' => $json_results->resultsPage->results->event,
 						 'totalEntries' => $json_results->resultsPage->totalEntries,
 						 'perPage' => $json_results->resultsPage->perPage,
@@ -47,7 +49,7 @@ class SongkickEvents {
 		} else { 
 			$events = $cached_results['events'];
 		}
-		if ( $sorder = 'descending' ) {
+		if ( $sorder == 'descending' ) {
 			usort($events, array($this,'compare_event_dates'));
 		}
 		return $events;
@@ -55,11 +57,15 @@ class SongkickEvents {
 
 	function get_number_of_pages($call_type='past_events', $per_page, $page=1) {
 		if ( $call_type == 'past_events' ) {
-			$json_results = $this->get_uncached_gigography_events($per_page, $page);
+			try {
+				$json_results = $this->get_uncached_gigography_events($per_page, $page);
+			} catch (Exception $e) { throw $e; }
 			return ceil( ($json_results->resultsPage->totalEntries / $json_results->resultsPage->perPage) );
 		}
 		elseif ( $call_type == 'upcoming_events' ) {
-			$json_results = $this->get_uncached_gigography_events($per_page, $page);
+			try {
+			 	$json_results = $this->get_uncached_gigography_events($per_page, $page);
+			} catch (Exception $e) { throw $e; }
 			return ceil( ($json_results->resultsPage->totalEntries / $json_results->resultsPage->perPage) );
 		}
 		else { return 0; }
@@ -76,17 +82,19 @@ class SongkickEvents {
 	}
 
 	protected function get_uncached_upcoming_events($per_page) {
-		$response = $this->fetch_upcoming_events($this->calendar_url($per_page));
-		if ($response === false) {
-			// OMG something went wrong...
+		try {
+			$response = $this->fetch_upcoming_events($this->calendar_url($per_page));
+		} catch (Exception $e) {
+			throw $e;
 		}
 		return $this->events_from_json($response);
 	}
 
 	protected function get_uncached_gigography_events($per_page, $page=1) {
-		$response = $this->fetch_past_events($this->gigography_url($per_page, $page));
-		if ($response == false) {
-			// OMG somethign went wrong...
+		try {
+			$response = $this->fetch_past_events($this->gigography_url($per_page, $page));
+		} catch (Exception $e) {
+			throw $e;
 		}
 		return $this->events_from_json($response);
 	}
@@ -109,13 +117,11 @@ class SongkickEvents {
 		update_option(SONGKICK_GIGOGRAPHY_CACHE, $all_cache);
 	}
 	protected function calendar_cache_expired($cached_results) {
-		$cached_results=null;
 		if (!$cached_results || $cached_results == null) return true;
 		return (bool) ((time() - $cached_results['timestamp'] ) > SONGKICK_REFRESH_CALENDAR_CACHE);
 	}
 
 	protected function gigography_cache_expired($cached_results) {
-		$cached_results=null;
 		if (!$cached_results || $cached_results == null) return true;
 		return (bool) ((time() - $cached_results['timestamp'] ) > SONGKICK_REFRESH_GIGOGRAPHY_CACHE);
 	}
@@ -124,14 +130,10 @@ class SongkickEvents {
 		$http     = new WP_Http;
 		$response =  $http->request($url);
 		if (is_wp_error($response)) {
-			echo "WP_Http object is throwing an WP_Error object.\n";
-			echo $response->get_error_code();
-			echo $response->get_error_messages($response->get_error_code());
-			return false;
+			throw new Exception('The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.');
 	        }
 		elseif ($response['response']['code'] != 200) {
-			echo "The http request to songkick returned an error code: " . $response['response']['code'];
-			return false;
+			throw new Exception('The WP_Http object returned error code '.$response['response']['code'].' while fetching upcoming events from songkick.');
 		}
 		return $response['body'];
 	}
@@ -140,12 +142,11 @@ class SongkickEvents {
 		$http 		= new WP_Http;
 		$response	= $http->request($url);
 		if (is_wp_error($response)) {
-			echo "WP_Http object is throwing an WP_Error object.";
-			echo $response->get_error_code();
-			echo $response->get_error_messages($response->get_error_code());
-			return false;
+			throw new Exception('The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.');
 	        }
-		elseif ($response['response']['code'] != 200) return false;
+		elseif ($response['response']['code'] != 200) {
+			throw new Exception('The WP_Http object returned error code '.$response['response']['code'].' while fetching upcoming events from songkick.');
+		}
 		return $response['body'];
 	}
 
