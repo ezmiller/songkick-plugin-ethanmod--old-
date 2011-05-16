@@ -130,7 +130,9 @@ class SongkickEvents {
 		$http     = new WP_Http;
 		$response =  $http->request($url);
 		if (is_wp_error($response)) {
-			throw new Exception('The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.');
+			$msg = "The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.";
+			$msg .= "Wp_Error message: ".$response->get_error_message().".";
+			throw new Exception($msg);
 	        }
 		elseif ($response['response']['code'] != 200) {
 			throw new Exception('The WP_Http object returned error code '.$response['response']['code'].' while fetching upcoming events from songkick.');
@@ -142,8 +144,10 @@ class SongkickEvents {
 		$http 		= new WP_Http;
 		$response	= $http->request($url);
 		if (is_wp_error($response)) {
-			throw new Exception('The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.');
-	        }
+			$msg = "The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.";
+			$msg .= "Wp_Error message: ".$response->get_error_message().".";
+			throw new Exception($msg);	  
+		}
 		elseif ($response['response']['code'] != 200) {
 			throw new Exception('The WP_Http object returned error code '.$response['response']['code'].' while fetching upcoming events from songkick.');
 		}
