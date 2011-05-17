@@ -128,7 +128,7 @@ class SongkickEvents {
 
 	protected function fetch_upcoming_events($url) {
 		$http     = new WP_Http;
-		$response =  $http->request($url);
+		$response =  $http->request($url, array('timeout' => '7'));
 		if (is_wp_error($response)) {
 			$msg = "The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.";
 			$msg .= "Wp_Error message: ".$response->get_error_message().".";
@@ -142,7 +142,7 @@ class SongkickEvents {
 
 	protected function fetch_past_events($url) {
 		$http 		= new WP_Http;
-		$response	= $http->request($url);
+		$response	= $http->request($url, array('timeout' => '7'));
 		if (is_wp_error($response)) {
 			$msg = "The WP_Http object threw a WP_Error object while fetching upcoming events from songkick.";
 			$msg .= "Wp_Error message: ".$response->get_error_message().".";
