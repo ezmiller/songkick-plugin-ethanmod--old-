@@ -64,7 +64,8 @@ function songkick_option($key) {
 function powered_by_songkick($logo) {
 	$text = __('Concerts by Songkick', SONGKICK_TEXT_DOMAIN);
 	$html  = "<a class='powered-by' href='http://www.songkick.com/'>";
-	$html .= "<img src='".site_url('/wp-content/plugins/songkick-concerts-and-festivals/'.$logo)."' title='".htmlentities($text, ENT_QUOTES, SONGKICK_I18N_ENCODING)."' alt='".htmlentities($text, ENT_QUOTES, SONGKICK_I18N_ENCODING)."' /></a>";
+	$html .= "<img src='".WP_PLUGIN_URL."/".str_replace(basename( __FILE__),"",plugin_basename(__FILE__)).$logo."'";
+	$html .= " title='".htmlentities($text, ENT_QUOTES, SONGKICK_I18N_ENCODING)."' alt='".htmlentities($text, ENT_QUOTES, SONGKICK_I18N_ENCODING)."' /></a>";
 	return $html;
 }
 
