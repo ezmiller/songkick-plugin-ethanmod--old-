@@ -17,9 +17,10 @@ function songkick_admin_settings() {
 			'number_of_events' => 10,
 			'logo'          => 'songkick-logo.png',
 			'date_color'    => '#303030',
-		    'shortcode_number_of_events' => 50,
-		    'shortcode_logo'          => 'songkick-logo.png',
-    		'shortcode_date_color'    => '#303030'
+		        'shortcode_number_of_future_events' => 50,
+			'shortcode_number_of_past_events' => 50,
+		        'shortcode_logo'          => 'songkick-logo.png',
+    		        'shortcode_date_color'    => '#303030'
 		);
 	}
 
@@ -34,15 +35,18 @@ function songkick_admin_settings() {
 		$options['hide_if_empty']  = ($_POST['songkick_hide_if_empty'] === 'on');
 		$options['logo']           = strip_tags(stripslashes($_POST['songkick_logo']));
 		$options['date_color']     = strip_tags(stripslashes($_POST['songkick_date_color']));
-		$limit = (int)$_POST['songkick_number_of_events'];
-		if ($limit > 50) $limit = 50;
-		$options['number_of_events'] = $limit;
+		$future_events_limit = (int)$_POST['songkick_number_of_events'];
+		if ($future_events_limit > 50) $future_events_limit = 50;
+		$options['number_of_events'] = $future_events_limit;
 
 		$options['shortcode_logo']           = strip_tags(stripslashes($_POST['shortcode_songkick_logo']));
 		$options['shortcode_date_color']     = strip_tags(stripslashes($_POST['shortcode_songkick_date_color']));
-		$limit = (int)$_POST['songkick_shortcode_number_of_events'];
-		if ($limit > 50) $limit = 50;
-		$options['shortcode_number_of_events'] = $limit;
+		$future_events_limit = (int)$_POST['songkick_shortcode_number_of_future_events'];
+		if ($future_events_limit > 50) $future_events_limit = 50;
+		$options['shortcode_number_of_future_events'] = $future_events_limit;
+		$past_events_limit = (int)$_POST['songkick_shortcode_number_of_past_events'];
+                if ($past_events_limit > 50) $past_events_limit = 50;
+		$options['shortcode_number_of_past_events'] = $past_events_limit;
 
 		update_option(SONGKICK_CALENDAR_CACHE,   null);
 		update_option(SONGKICK_GIGOGRAPHY_CACHE,   null);
@@ -67,7 +71,8 @@ function songkick_admin_settings() {
 
 	$shortcode_songkick_logo    = htmlspecialchars($options['shortcode_logo'], ENT_QUOTES);
 	$shortcode_date_color       = htmlspecialchars($options['shortcode_date_color'], ENT_QUOTES);
-	$shortcode_number_of_events = htmlspecialchars($options['shortcode_number_of_events']);
+	$shortcode_number_of_future_events = htmlspecialchars($options['shortcode_number_of_future_events']);
+	$shortcode_number_of_past_events = htmlspecialchars($options['shortcode_number_of_past_events']);
 
 	echo '<div class="wrap" id="songkick_concerts_and_festivals_settings">
 		     <div id="icon-options-general" class="icon32"></div>
@@ -106,8 +111,12 @@ function songkick_admin_settings() {
 	
 	echo '<br><h3>Shortcode settings</h3>';
 	echo '<table class="form-table">';
-	echo '<tr><th><label for="songkick_shortcode_number_of_events">Number of events to show</label></th>';
-	echo '<td><input id="songkick_shortcode_number_of_events" name="songkick_shortcode_number_of_events" type="text" value="'.$shortcode_number_of_events.'" /> ';
+	echo '<tr><th><label for="songkick_shortcode_number_of_future_events">Number of future events to show</label></th>';
+	echo '<td><input id="songkick_shortcode_number_of_future_events" name="songkick_shortcode_number_of_future_events" type="text" value="'.$shortcode_number_of_future_events.'" /> ';
+	echo '<span class="description"> Max. 50</span>';
+	echo '</td></tr>';
+	echo '<tr><th><label for="songkick_shortcode_number_of_past_events">Number of past events to show</label></th>';
+	echo '<td><input id="songkick_shortcode_number_of_past_events" name="songkick_shortcode_number_of_past_events" type="text" value="'.$shortcode_number_of_past_events.'" /> ';
 	echo '<span class="description"> Max. 50</span>';
 	echo '</td></tr>';
 	echo '<tr><th><label for="shortcode_songkick_logo">' . 'Songkick logo' . '</label></th>';
@@ -130,11 +139,11 @@ function songkick_admin_settings() {
 	echo '<td><input id="songkick_title" name="songkick_title" type="text" value="'.$title.'" />';
 	echo '</td></tr>';
 
-	echo '<tr><th><label for="songkick_number_of_events">Number of events to show</label></th>';
+	echo '<tr><th><label for="songkick_number_of_events">Number of future events to show</label></th>';
 	echo '<td><input id="songkick_number_of_events" name="songkick_number_of_events" type="text" value="'.$number_of_events.'" /> ';
 	echo '<span class="description"> Max. 50</span>';
 	echo '</td></tr>';
-
+	
 	echo '<tr><th><label for="songkick_hide_if_empty">Hide if there are no events?</label></th>';
 	echo '<td><input id="songkick_hide_if_empty" name="songkick_hide_if_empty" type="checkbox" '.$hide_if_empty.' /> ';
 	echo '</td></tr>';

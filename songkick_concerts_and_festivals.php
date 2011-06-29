@@ -115,7 +115,7 @@ function songkick_upcoming_concerts_and_festivals_shortcode_handler() {
 	wp_enqueue_style('songkick_concerts', '/wp-content/plugins/songkick-concerts-and-festivals-ethanmod/songkick_concerts.css') ;
 	$options          = get_option(SONGKICK_OPTIONS);
 	$date_color       = $options['shortcode_date_color'];
-	$number_of_events = $options['shortcode_number_of_events'];
+	$number_of_events = $options['shortcode_number_of_future_events'];
 	$logo             = $options['shortcode_logo'];
 	$sk = songkick_events_factory($options);
 	$page_to_get = 1; // get the first page
@@ -137,7 +137,7 @@ function songkick_past_concerts_and_festivals_shortcode_handler() {
 	wp_enqueue_style('songkick_concerts', '/wp-content/plugins/songkick-concerts-and-festivals-ethanmod/songkick_concerts.css');
 	$options		= get_option(SONGKICK_OPTIONS);
 	$date_color		= $options['shortcode_date_color'];
-	$number_of_events	= $options['shortcode_number_of_events'];
+	$number_of_events	= $options['shortcode_number_of_past_events'];
 	$logo			= $options['shortcode_logo'];
 	$sk = songkick_events_factory($options);
 	try {
