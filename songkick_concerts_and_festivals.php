@@ -194,7 +194,7 @@ function songkick_widget_init() {
 		echo $after_widget;
 	}
 
-	register_sidebar_widget(array('Songkick Concerts and Festivals', 'widgets'), 'songkick_widget');
+	wp_register_sidebar_widget(array('Songkick Concerts and Festivals', 'widgets'), 'songkick_widget');
 	register_widget_control(array('Songkick Concerts and Festivals', 'widgets'), 'songkick_widget_settings');
 }
 
